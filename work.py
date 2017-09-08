@@ -12,7 +12,7 @@ okcoinRESTURL = 'www.okcoin.cn'
 
 if __name__ == "__main__":
     logging.basicConfig(filename='/usr/share/nginx/html/log.html', filemode='w', level=logging.INFO,
-                        format='%(asctime)s %(message)s')
+                        format='%(asctime)s %(message)s<br>')
 
     okcoinSpot = OKCoinSpot(okcoinRESTURL, apikey, secretkey)
     coin_max = hb_max = 0
@@ -26,7 +26,7 @@ if __name__ == "__main__":
         hbRes_sell = hbRes['asks'][0][0]
         hbRes_buy = hbRes['bids'][0][0]
 
-        if (hbRes_buy - coinRes_sell > coin_max or hbRes_buy - coinRes_sell >= 0.8):
+        if (hbRes_buy - coinRes_sell > coin_max):
             coin_max = hbRes_buy - coinRes_sell
             message = ('OKCOIN: sell: %.2f buy: %.2f' % (
                 coinRes_sell,
@@ -42,7 +42,7 @@ if __name__ == "__main__":
                 coin_max))
             logging.info(message)
 
-        if (coinRes_buy - hbRes_sell > hb_max or coinRes_buy - hbRes_sell >= 0.8):
+        if (coinRes_buy - hbRes_sell > hb_max):
             hb_max = coinRes_buy - hbRes_sell
             message = ('OKCOIN: sell: %.2f buy: %.2f' % (
                 coinRes_sell,
