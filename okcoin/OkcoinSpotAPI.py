@@ -5,10 +5,10 @@ from okcoin.HttpMD5Util import buildMySign,httpGet,httpPost
 
 class OKCoinSpot:
 
-    def __init__(self,url,apikey,secretkey):
-        self.__url = url
-        self.__apikey = apikey
-        self.__secretkey = secretkey
+    def __init__(self):
+        self.__url = self.okcoinRESTURL
+        self.__apikey = self.apikey
+        self.__secretkey = self.secretkey
 
     #获取OKCOIN现货行情信息
     def ticker(self,symbol = ''):
@@ -116,19 +116,3 @@ class OKCoinSpot:
            }
            params['sign'] = buildMySign(params,self.__secretkey)
            return httpPost(self.__url,ORDER_HISTORY_RESOURCE,params)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
