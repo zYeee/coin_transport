@@ -1,14 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # 用于访问OKCOIN 现货REST API
-from okcoin.HttpMD5Util import buildMySign,httpGet,httpPost
+from okcoin.HttpMD5Util import buildMySign, httpGet, httpPost
+
+import configparser
 
 class OKCoinSpot:
 
-    def __init__(self,url,apikey,secretkey):
-        self.__url = url
-        self.__apikey = apikey
-        self.__secretkey = secretkey
+    def __init__(self):
+        config = configparser.ConfigParser()
+        with open('config.ini') as configfile:
+            config.readfp(configfile)
+        self.__url = config.get('OKCOIN', 'url')
+        self.__apikey = config.get('OKCOIN', 'access_key')
+        self.__secretkey = config.get('OKCOIN', 'secret_key')
 
     #获取OKCOIN现货行情信息
     def ticker(self,symbol = ''):
@@ -116,19 +121,3 @@ class OKCoinSpot:
            }
            params['sign'] = buildMySign(params,self.__secretkey)
            return httpPost(self.__url,ORDER_HISTORY_RESOURCE,params)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    

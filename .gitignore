@@ -8,8 +8,7 @@ __pycache__/
 *.swp
 *.swo
 
-huobi/Util.py
-okcoin/OkcoinSpotAPI.py
+config.ini
 
 # Distribution / packaging
 .Python

@@ -12,7 +12,7 @@ import ssl
 
 if __name__ == "__main__":
     ssl._create_default_https_context = ssl._create_unverified_context
-    logging.basicConfig(filename='/tmp/log', filemode='a', level=logging.INFO,
+    logging.basicConfig(filename='/tmp/coin_log', filemode='a', level=logging.INFO,
                         format='%(asctime)s %(message)s')
 
     original_account_info = common.getAccountInfo()
@@ -38,31 +38,13 @@ if __name__ == "__main__":
         hbRes_sell = hbRes['asks'][0][0]
         hbRes_buy = hbRes['bids'][0][0]
 
-
         print ('OKCOIN: sell: %.2f buy: %.2f' % (
             coinRes_sell,
             coinRes_buy))
         print ('HUOBI: buy: %.2f sell: %.2f' % (
             hbRes_buy,
             hbRes_sell))
-        print ('OKCOIN: sell: %.2f buy: %.2f' % (
-            coinRes_sell,
-            coinRes_buy))
-        print ('HUOBI: buy: %.2f sell: %.2f' % (
-            hbRes_buy,
-            hbRes_sell))
-        if (hbRes_buy - coinRes_sell > 1.2):
-            hb_t = HuobiService.trade(0.1, 'sell-market')
-            logging.info(hb_t)
-            if (hb_t['status'] != 'ok'):
-                logging.info(hb_t['status'])
-                exit()
-            coin_t = okcoinSpot.trade('etc_cny', 'buy_market', coinRes_sell/10)
-            logging.info(coin_t)
-            if (str(coin_t['result']) != 'True'):
-                logging.info(coin_t['result'])
-                exit()
-
+        if (hbRes_buy - coinRes_sell > 1):
             coin_max = hbRes_buy - coinRes_sell
             message = ('OKCOIN: sell: %.2f buy: %.2f' % (
                 coinRes_sell,
@@ -78,18 +60,18 @@ if __name__ == "__main__":
                 coin_max))
             logging.info(message)
 
-        if (coinRes_buy - hbRes_sell > 1.2):
-            coin_t = okcoinSpot.trade('etc_cny', 'sell_market', 0, '0.1')
-            logging.info(coin_t)
-            if (str(coin_t['result']) != 'True'):
-                logging.info(coin_t['result'])
-                exit()
-            hb_t = HuobiService.trade(round(hbRes_sell/10, 2), 'buy-market')
+            hb_t = HuobiService.trade(0.2, 'sell-market')
             logging.info(hb_t)
             if (hb_t['status'] != 'ok'):
                 logging.info(hb_t['status'])
                 exit()
+            coin_t = okcoinSpot.trade('etc_cny', 'buy_market', coinRes_sell/5)
+            logging.info(coin_t)
+            if (str(coin_t['result']) != 'True'):
+                logging.info(coin_t['result'])
+                exit()
 
+        if (coinRes_buy - hbRes_sell > 1):
             hb_max = coinRes_buy - hbRes_sell
             message = ('OKCOIN: sell: %.2f buy: %.2f' % (
                 coinRes_sell,
@@ -103,4 +85,16 @@ if __name__ == "__main__":
 
             message = ("hb max: %.2f" % hb_max)
             logging.info(message)
-        time.sleep(10)
+
+            coin_t = okcoinSpot.trade('etc_cny', 'sell_market', 0, '0.2')
+            logging.info(coin_t)
+            if (str(coin_t['result']) != 'True'):
+                logging.info(coin_t['result'])
+                exit()
+            hb_t = HuobiService.trade(round(hbRes_sell/5, 2), 'buy-market')
+            logging.info(hb_t)
+            if (hb_t['status'] != 'ok'):
+                logging.info(hb_t['status'])
+                exit()
+
+        time.sleep(3)
