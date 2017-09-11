@@ -148,3 +148,16 @@ def cancelOrder(coinType,id,method):
 def getDepth():
     url = "https://be.huobi.com/market/depth?symbol=etccny&type=step0"
     return httpRequest(url, '', 'get')
+
+def trade(amount, type):
+    params = {}
+    params['account-id'] = 622657
+    params['amount'] = amount
+    params['source'] = 'api'
+    params['symbol'] = 'etccny'
+    params['type'] = type
+
+    return  api_key_request('POST', params, '/v1/order/orders/place')
+
+def accountInfo():
+    return api_key_request('GET', None, '/v1/account/accounts/622657/balance')
